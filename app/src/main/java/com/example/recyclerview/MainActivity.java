@@ -1,14 +1,19 @@
 package com.example.recyclerview;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import android.app.Activity;
+import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterListSiswa.OnItemClickListener {
 
     RecyclerView rvListDataSiswa;
     List<ModelSiswa> items;
@@ -22,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         rvListDataSiswa = findViewById(R.id.rvListData);
         items = new ArrayList<>();
 
-        // Add sample data
         items.add(new ModelSiswa("Abdun Nafi Hibatullah", "Absen: 1","https://png.pngtree.com/element_our/png/20181022/man-avatar-icon-professional-man-character-business-man-avatar-carton-symbol-png_206531.jpg"));
         items.add(new ModelSiswa("Aldiansyah Fayruz",  "Absen: 2" , "https://png.pngtree.com/element_our/png/20181022/man-avatar-icon-professional-man-character-business-man-avatar-carton-symbol-png_206531.jpg"));
         items.add(new ModelSiswa("Alikha Mutiara Hati",  "Absen: 3", "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3155826/user-clipart-md.png"));
@@ -61,10 +65,15 @@ public class MainActivity extends AppCompatActivity {
         items.add(new ModelSiswa("Shofiyyul Hilmi","Absen: 36", "https://png.pngtree.com/element_our/png/20181022/man-avatar-icon-professional-man-character-business-man-avatar-carton-symbol-png_206531.jpg"));
         items.add(new ModelSiswa("Zaskia Amelia Putri","Absen: 37", "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3155826/user-clipart-md.png"));
 
-        // Add more items as needed
-
         adapter = new AdapterListSiswa(items, this);
         rvListDataSiswa.setLayoutManager(new LinearLayoutManager(this));
         rvListDataSiswa.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(ModelSiswa currentSiswa) {
+        String message = "Nama: " + currentSiswa.getNama() + "\n" + currentSiswa.getNoAbsen();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

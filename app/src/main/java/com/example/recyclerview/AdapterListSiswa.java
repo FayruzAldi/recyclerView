@@ -8,21 +8,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.Instant;
 import java.util.List;
 
 public class AdapterListSiswa extends RecyclerView.Adapter<AdapterListSiswa.ViewHolder> {
 
     private List<ModelSiswa> items;
-    Context context;
+    private Context context;
+    private OnItemClickListener onItemClickListener;
 
     public AdapterListSiswa(List<ModelSiswa> items, Context context) {
         this.items = items;
         this.context = context;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -34,13 +37,24 @@ public class AdapterListSiswa extends RecyclerView.Adapter<AdapterListSiswa.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvName.setText(items.get(position).getNama());
-        holder.tvNumber.setText(items.get(position).getNoAbsen());
+        final ModelSiswa currentSiswa = items.get(position);
+
+        holder.tvName.setText(currentSiswa.getNama());
+        holder.tvNumber.setText(currentSiswa.getNoAbsen());
         Glide.with(context)
-                .load(items.get(position).getImage())
+                .load(currentSiswa.getImage())
                 .placeholder(R.drawable.profile)
                 .error(R.drawable.error)
                 .into(holder.profilePicture);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(currentSiswa);
+                }
+            }
+        });
     }
 
     @Override
@@ -48,7 +62,7 @@ public class AdapterListSiswa extends RecyclerView.Adapter<AdapterListSiswa.View
         return items.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName;
         TextView tvNumber;
         ImageView profilePicture;
@@ -61,7 +75,8 @@ public class AdapterListSiswa extends RecyclerView.Adapter<AdapterListSiswa.View
         }
     }
 
-    public ModelSiswa getItem(int id) {
-        return items.get(id);
+    // Interface untuk menangani klik item
+    public interface OnItemClickListener {
+        void onItemClick(ModelSiswa currentSiswa);
     }
 }
